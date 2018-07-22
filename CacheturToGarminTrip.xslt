@@ -1,7 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+   * A small transfor to put Waypoints downloaded from Cachetur.no
+     directly into a route on my Garmin SmartDrive 50.
+
+   * Assumptions and caveats;
+     * Waypoints in the file exported from Cachetur.no is already in the
+       correct order. This has been true for the samples I have tried so
+       far, but I don't think there exists any guarantee for this.
+     * After starting the Garmin unit with new routes it uses long time
+       before the route is visible.
+     * Only the cachename is included in the file produced here, but I guess
+       most users will already have the needed caches on the Garminunit
+       already, either by export from Gsak, or by placing the source-file
+       used by this transform directly into the GPX-directory on the Garmin.
+
+-->
+
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:csharp="urn:schemas-microsoft-com:xslt"
                 xmlns="http://www.topografix.com/GPX/1/1"
                 xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3"
                 xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v2"
@@ -22,10 +39,11 @@
           <xsl:value-of select="ns1:author"/>
         </xsl:element>
         <xsl:element name="time">
-          <xsl:value-of select="csharp:getCurrentDateTime()"/>
+          <xsl:value-of select="ns1:time"/>
         </xsl:element>
         <xsl:element name="extensions">
           <xsl:element name="vs:srcid">
+            <!-- Unsure about this value. -->
             <xsl:text>359828952</xsl:text>
           </xsl:element>
         </xsl:element>
@@ -62,16 +80,4 @@
       </xsl:element>
     </xsl:element>
   </xsl:template>
-  <csharp:script implements-prefix='csharp' language='C#'>
-    <![CDATA[
-public string getCurrentDateTime()
-{
-	DateTime dt = DateTime.Now;
-	string curdate = dt.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-	string curtime = dt.ToString("T", System.Globalization.CultureInfo.InvariantCulture);
-	string retval = curdate + "T" + curtime;
-	return retval;
-}    ]]>
-  </csharp:script>
-
 </xsl:stylesheet>
